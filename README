@@ -1,0 +1,154 @@
+Felix Java v2.0.0
+
+-----------
+Description
+-----------
+
+Felix : Logiciel client chat.
+
+v2.0.0 : 
+- configuration dans le répertoire config ;
+- communication avec le composant Camix (BufferedReader et BufferedWriter) ;
+- aucun test n'est implémenté (à faire).
+
+----------
+Dépendance
+----------
+
+Camix Java v3.0.0
+
+-----------
+Utilisation
+-----------
+
+Avec make (utilisation du fichier Makefile) :
+---------------------------------------------
+
+make compile : Compilation des sources du projet (dans le répertoire build).
+
+make launch : Lancement du programme.
+
+make documentation : Génération de la documentation javadoc (attention, avec certaines versions de javadoc les sources ne doivent pas être compilées pour que la génération de la documentation se passe correctement). La documentation est générée dans le répertoire doc du projet.
+
+make clean : Nettoyage du projet (suppression du répertoire build).
+
+make mrproper : Nettoyage du projet (suppression du répertoire build et de la documentation).
+
+make new : Nettoyer, compiler.
+
+make test_felix : Tests du programme Felix.
+
+Voir le fichier Makefile pour plus de détails (configuration, lancement de tests plus ciblés).
+
+
+Avec ant (utilisation du fichier build.xml) :
+---------------------------------------------
+
+ant compile : Compilation des sources du projet (dans le répertoire build).
+
+ant launch : Lancement du programme.
+
+ant documentation : Génération de la documentation javadoc (attention, avec certaines versions de javadoc les sources ne doivent pas être compilées pour que la génération de la documentation se passe correctement). La documentation est générée dans le répertoire doc du projet.
+
+ant clean : Nettoyage du projet (suppression du répertoire build).
+
+ant mrproper : Nettoyage du projet (suppression du répertoire build et de la documentation).
+
+ant new : Nettoyer, compiler.
+
+ant test_felix : Tests du programme Felix.
+
+Voir le fichier build.xml pour plus de détails (configuration, lancement de tests plus ciblés).
+
+
+Avec Eclipse :
+--------------
+
+Créer un nouveau projet java : 
+
+File -> New -> Java Project
+Project Name : Felix_Java
+Next >
+
+(onglet Source) 
+Create new source folder
+Folder name : test
+Finish
+
+(onglet Source) 
+Create new source folder
+Folder name : config
+Finish
+
+(onglet Libraries) 
+Add Library... -> JUnit
+Next >
+Sélectionner JUnit 4
+Finish
+
+(onglet Libraries) 
+Add External JARs... -> 
+<path>/<to>/jemmy2.jar (e.g.: /usr/share/java/jemmy2.jar)
+Valider
+
+(onglet Libraries) 
+Add External JARs... -> 
+<path>/<to>/easymock.jar (e.g.: /usr/share/java/easymock.jar)
+Valider
+
+Remarque : utiliser une version easymock >= 3.1.
+
+Remarque : l'utilisation de easymock peut nécessiter les librairies cglib (cglib-nodep) et objenesis :
+
+Add External JARs... -> 
+<path>/<to>/cglib-nodep.jar (e.g.: /usr/share/java/cglib-nodep.jar)
+Valider
+Add External JARs... -> 
+<path>/<to>/objenesis.jar (e.g.: /usr/share/java/objenesis.jar)
+Valider
+
+Finish
+
+
+Remarque : il peut être nécessaire de préciser que les sources du projet sont en UTF-8 (clic droit sur le projet -> Properties -> Resource -> Text file encoding : Other |UTF-8|.
+
+Importer les sources :
+
+(dans la vue Package Explorer)
+clique droit sur le projet
+Import...
+General > File System
+From directory : (Browse...) /<path>/<to>/<felix>/
+Valider
+(cliquer sur la flèche (ou le +) devant le répertoire du projet)
+sélectionner les répertoires "config", "src" et "test"
+Finish
+
+Configuration de l'exécution du logiciel :
+
+Run -> Run Configurations...
+Java Application -> clique droit -> New
+Name : Felix Java
+Main class : (Search...) Felix - felix
+Apply
+
+Close
+
+Configuration de l'exécution des tests unitaires :
+
+Run -> Run Configurations...
+JUnit -> clique droit -> New
+Name : Felix Java Test
+sélectionner "Run a single test"
+Project : (Browse...) Felix_Java
+Test class : (Search...) FelixTestSuite - felix
+Test runner : JUnit 4
+Remarque : Si le message "Multiple launcher available" apparaît, 
+           clique sur "Select one..."
+           selectionner "Use configuration specific settings"
+           Launchers : Eclipse JUnit Launcher
+           OK
+Apply
+Close
+
+

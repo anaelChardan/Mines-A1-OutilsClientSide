@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Build.xml de Felix_Java-v2.0
+	pour Ant.
+
+	Version : 2.0
+	Auteur  : Matthias Brun
+-->
+<project name="Felix" basedir="." default="compile">
+
+	<!--
+		Organistion générale du projet.
+	-->
+
+	<!-- Organisation des sources de code, de test et de configuration. -->
+        <property name="src.dir" value="src"/>
+        <property name="test.dir" value="test"/>
+	<property name="conf.dir" value="config"/>
+
+	<!-- Organistion de la construction. -->
+        <property name="build.dir" value="build"/>
+        <property name="doc.dir" value="doc"/>
+
+
+
+	<!--
+		Configuration des outils de compilation et de documentation.
+	-->
+
+	<!-- Encodage des fichiers sources. -->
+	<property name="encoding.source" value="utf-8"/>
+
+
+
+	<!--
+		Configuration des outils de test.
+	-->
+
+	<!-- Classpath intégrant JUnit, EasyMock et Jemmy. -->
+	<property name="junit.path" value="/usr/local/share/java/junit4.jar"/>
+	<property name="cglib.path" value="/usr/local/share/java/cglib-nodep.jar"/>
+	<property name="objenesis.path" value="/usr/local/share/java/objenesis.jar"/>
+	<property name="mock.path" value="/usr/local/share/java/easymock.jar"/>
+	<property name="jemmy.path" value="/usr/local/share/java/jemmy2.jar"/>
+
+	<!-- Décommenter pour utiliser l'interface texte de JUnit. -->
+	<property name="test.runner" value="junit.textui.TestRunner"/>
+
+	<!-- Décommenter pour utiliser l'interface swing de JUnit. -->
+	<!-- property name="test.runner" value="junit.swingui.TestRunner"/-->
+	<!-- property name="junit.graphic.path" value="/usr/local/share/java/junit.jar"/-->
+
+	<!-- Décommenter pour utiliser l'interface AWT de JUnit. -->
+	<!-- property name="test.runner" value="junit.awtui.TestRunner"/-->
+	<!-- property name="junit.graphic.path" value="/usr/local/share/java/junit.jar"/-->
+
+	<!--<property name="test.path" value="${junit.graphic.path}:${junit.path}:${cglib.path}:${objenesis.path}:${mock.path}:${jemmy.path}"/>-->
+	<property name="test.path" value="${junit.path}:${cglib.path}:${objenesis.path}:${mock.path}:${jemmy.path}"/>
+
+
+	<!--
+		Configuration des outils de vérification statique.
+	-->
+
+	<!-- Organisation de checkstyle. -->
+	<taskdef resource="checkstyletask.properties" 
+		classpath="/usr/local/share/java/checkstyle.jar"/>
+	<property name="checkstyle.file" value="checkstyle.xml"/>
+
+
+
+	<!--
+		Configuration du projet.
+	-->
+
+	<!-- Sourcepath et classpath du projet. -->
+	<property name="src.path" value="${src.dir}:${test.dir}"/>
+	<property name="class.path" value="${conf.dir}:${build.dir}:${test.path}"/>
+
+
+
+	<!--
+		Organisation du projet.
+	-->
+
+	<!-- Nom de base des packages. -->
+	<property name="package.base" value="felix"/>
+
+	<!-- Programme principale et programme de test associé. -->
+	<property name="main.program" value="${package.base}.Felix"/>
+	<property name="test.program" value="${package.base}.FelixTestSuite"/>
+
+
+
+	<!--
+		Compilation. 
+	-->
+
+	<target name="compile"> 
+		<!-- Création du repertoire de destination des classes. -->
+		<mkdir dir="${build.dir}"/>
+
+		<!-- Compilation des sources du projet. -->
+		<javac classpath="${class.path}" sourcepath="${src.path}" srcdir="${src.dir}" destdir="${build.dir}"
+		       encoding="${encoding.source}" includeantruntime="false"/>
+		<javac classpath="${class.path}" sourcepath="${src.path}" srcdir="${test.dir}" destdir="${build.dir}"
+		       encoding="${encoding.source}" includeantruntime="false"/>
+	</target>
+
+
+
+	<!--
+		Exécution.
+	-->
+
+	<target name="launch">
+		<!-- Lancement du programme. -->
+		<java classpath="${class.path}" classname="${main.program}" fork="true"/>
+	</target>
+
+
+
+	<!--
+		Documentation.
+	-->
+
+	<target name="documentation">
+		<!-- Génération de la documentation javadoc. -->
+		<javadoc classpath="${class.path}" sourcepath="${src.path}" destdir="${doc.dir}"
+		         encoding="${encoding.source}" packagenames="${package.base}.*"/>
+	</target>
+
+
+
+	<!--
+		Nettoyage.
+	-->
+
+	<target name="clean">
+		<!-- Nettoyage du projet (suppression du répertoire build). -->
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="mrproper" depends="clean">
+		<!-- Nettoyage du projet (suppression du répertoire build et de la documentation). -->
+		<delete dir="${doc.dir}"/>
+	</target>
+
+	<target name="new" depends="clean,compile"/>
+		<!-- Nettoyer, compiler. -->
+
+
+
+	<!--
+		Test logiciel.
+	-->
+
+	<target name="test_felix">
+		<!-- Tests du programme Felix. -->
+		<java classpath="${class.path}" classname="${test.runner}"  fork="true">
+			<arg line="${test.program}"/>
+		</java>
+	</target>
+
+
+	<!--
+		Qualité du code.
+	-->
+
+	<target name="checkstyle_felix">
+		<!-- Vérifications statiques avec checkfile. -->
+		<checkstyle config="${checkstyle.file}">
+			<fileset dir="${src.dir}"/>
+			<fileset dir="${test.dir}"/>
+		</checkstyle>
+	</target>
+
+</project>
